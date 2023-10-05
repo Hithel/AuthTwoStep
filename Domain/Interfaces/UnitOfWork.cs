@@ -2,5 +2,5 @@ namespace Domain.Interfaces;
 public interface IUnitOfWork
 {
     IUser Users { get; }
-    Task<int> SaveChanges();
+    Task<int> SaveAsync();
 }
