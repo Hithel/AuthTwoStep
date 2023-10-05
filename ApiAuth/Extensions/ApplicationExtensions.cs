@@ -1,10 +1,10 @@
 
-
 using ApiAuth.Services;
 using Application.UnitOfWork;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
+
 
 namespace ApiAuth.Extensions;
     public  static class ApplicationExtensions
