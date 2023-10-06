@@ -1,7 +1,11 @@
 
 
+using System.Net;
+using System.Net.Mail;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using TwoFactorAuthNet;
 using TwoFactorAuthNet.Providers.Qr;
 
@@ -10,8 +14,6 @@ namespace ApiAuth.Services;
     {
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IConfiguration _conf;
-        private readonly int _accessTokenDuration;
-        private readonly int _refreshTokenTokenDuration;
         private readonly ILogger<Auth> _logger;
         public Auth
         (
@@ -22,12 +24,7 @@ namespace ApiAuth.Services;
         {
             _conf = conf;
             _passwordHasher = passwordHasher;
-            _logger = logger;
-
-
-            // Duracion del Token
-            _ = int.TryParse(conf["JWTSettings:AccessTokenTimeInMinutes"], out _accessTokenDuration);
-            _ = int.TryParse(conf["JWTSettings:RefreshTokenTimeInHours"], out _refreshTokenTokenDuration);        
+            _logger = logger;  
         }
 
         public byte[] CreateQR(ref User user)
@@ -48,4 +45,45 @@ namespace ApiAuth.Services;
             var tsa = new TwoFactorAuth(_conf["JWTSettings:Issuer"],6,30,Algorithm.SHA256);
             return tsa.VerifyCode(secret, code, 1);
         }
-    }
+
+        public async Task SendEmail(User User, byte[] QR)
+        {
+            try
+            {
+                var Email = new MailMessage
+                {
+                    From = new MailAddress(_conf.GetSection("InfoEmail:UserName").Value),
+                    Subject = "Código QR de verificación en dos pasos"
+                };
+
+                Email.To.Add(new MailAddress(User.Email));
+
+                var ArchivoQR = new Attachment(new MemoryStream(QR), "qrcode.png");
+
+                Email.Attachments.Add(ArchivoQR);
+
+                await Task.Run(() =>
+                {
+                    var ConfigEmail = new SmtpClient
+                    {
+                        Host = _conf.GetSection("InfoEmail:Host").Value,
+                        Port = int.Parse(_conf.GetSection("InfoEmail:Port").Value),
+                        Credentials = new NetworkCredential(_conf.GetSection("InfoEmail:UserName").Value, _conf.GetSection("InfoEmail:Password").Value),
+                        EnableSsl = true,
+                    };
+
+                    ConfigEmail.Send(Email);
+                });
+
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"Hubo un error en el envío del correo: {ex.Message}");
+            }
+        }
+
+
+
+
+}

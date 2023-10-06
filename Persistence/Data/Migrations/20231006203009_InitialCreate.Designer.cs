@@ -10,7 +10,7 @@ using Persistence;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(APIAuthTwoStepContext))]
-    [Migration("20231004204447_InitialCreate")]
+    [Migration("20231006203009_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -39,8 +39,13 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("varchar")
                         .HasColumnName("email");
 
-                    b.Property<string>("TwoStepSecret")
+                    b.Property<string>("Password")
                         .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar")
+                        .HasColumnName("Password");
+
+                    b.Property<string>("TwoStepSecret")
                         .HasColumnType("longtext")
                         .HasColumnName("twostepsecret");
 

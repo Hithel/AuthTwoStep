@@ -1,6 +1,8 @@
 using ApiAuth.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using AspNetCoreRateLimit;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,9 @@ builder.Services.AddAplicacionServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.ConfigureRateLimit();
+builder.Services.ConfigureCors();
+builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 
 builder.Services.AddDbContext<APIAuthTwoStepContext>(options =>
 {
@@ -25,6 +30,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseIpRateLimiting();
 }
 
 app.UseHttpsRedirection();

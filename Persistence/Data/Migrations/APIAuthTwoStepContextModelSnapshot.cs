@@ -36,8 +36,13 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("varchar")
                         .HasColumnName("email");
 
-                    b.Property<string>("TwoStepSecret")
+                    b.Property<string>("Password")
                         .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar")
+                        .HasColumnName("Password");
+
+                    b.Property<string>("TwoStepSecret")
                         .HasColumnType("longtext")
                         .HasColumnName("twostepsecret");
 

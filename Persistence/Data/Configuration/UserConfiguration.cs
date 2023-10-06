@@ -20,6 +20,12 @@ namespace Persistence.Data.Configuration;
                 .HasColumnType("varchar")
                 .HasMaxLength(50);
 
+                builder.Property(p => p.Password)
+                .IsRequired()
+                .HasColumnName("Password")
+                .HasColumnType("varchar")
+                .HasMaxLength(50);
+
                 builder.Property(p => p.Email)
                 .IsRequired()
                 .HasColumnName("email")
@@ -27,7 +33,6 @@ namespace Persistence.Data.Configuration;
                 .HasMaxLength(60);
 
                 builder.Property(p => p.TwoStepSecret)
-                .IsRequired()
                 .HasColumnName("twostepsecret");
 
                 builder.Property(p => p.DateCreated)
