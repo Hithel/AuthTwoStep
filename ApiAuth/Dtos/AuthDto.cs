@@ -4,8 +4,9 @@ namespace ApiAuth.Dtos;
 public class AuthDto
 {
     [Required]
-    public string Code { get; set; }
+    public string Username { get; set; }
 
     [Required]
-    public long Id { get; set; }
+    public string Code { get; set; }
+
 }

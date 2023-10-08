@@ -54,7 +54,7 @@ namespace ApiAuth.Controllers;
         }
 
 
-        [HttpGet("VerifyCode")]
+        [HttpPost("VerifyCode")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]    
         [ProducesResponseType(StatusCodes.Status400BadRequest)]    
@@ -62,7 +62,7 @@ namespace ApiAuth.Controllers;
         {        
             try
             {
-                User u = await _unitOfWork.Users.FindFirst(p => p.Id == data.Id);
+                User u = await _unitOfWork.Users.FindFirst(p => p.UserName == data.Username);
                 if(u.TwoStepSecret == null)
                 {
                     throw new ArgumentNullException(u.TwoStepSecret);
@@ -89,14 +89,21 @@ namespace ApiAuth.Controllers;
 
         public async Task<ActionResult<User>> Post(RegisterDto userRegister)
         {
-            var user = this._mapper.Map<User>(userRegister);
-            this._unitOfWork.Users.Add(user);
-            await _unitOfWork.SaveAsync();
-            if(user == null)
+            bool IsExists = await _unitOfWork.Users.IsExists(userRegister.Username); 
+            if(IsExists == true)
             {
-                return BadRequest();
+                return BadRequest("El Usuario ya esta registrado");
             }
-            userRegister.Id = user.Id;
-            return CreatedAtAction(nameof(Post), new {id = user.Id}, user);
+            else {
+                 var user = this._mapper.Map<User>(userRegister);
+                this._unitOfWork.Users.Add(user);
+                await _unitOfWork.SaveAsync();
+                if(user == null)
+                {
+                    return BadRequest();
+                }
+                userRegister.Id = user.Id;
+                return CreatedAtAction(nameof(Post), new {id = user.Id}, user);
+            }
         }
     }

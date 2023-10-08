@@ -31,6 +31,8 @@ namespace Application.Repository;
             return await _context.Set<T>().FirstAsync();
         }
 
+        
+
 
         public virtual void Add(T entity)
         {
@@ -50,6 +52,7 @@ namespace Application.Repository;
         {
             return await _context.Set<T>().FindAsync(id);
         }
+        
         
         public void Remove(T entity)
         {

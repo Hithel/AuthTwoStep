@@ -32,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseIpRateLimiting();
 }
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

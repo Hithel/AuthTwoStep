@@ -2,6 +2,7 @@
 
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Repository;
@@ -12,4 +13,16 @@ namespace Application.Repository;
     {
         _context = context;
     }
+
+    public async virtual Task<bool> IsExists (string userName)
+    {
+        if (!string.IsNullOrEmpty(userName))
+        {
+            var exists = await _context.Users.AnyAsync(p => p.UserName == userName);
+            return exists; 
+        }
+
+        return false;
+    }
+
 }
