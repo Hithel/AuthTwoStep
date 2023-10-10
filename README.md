@@ -2,6 +2,9 @@
 
 Este proyecto implementa un sistema de autenticación de dos factores que utiliza correo electrónico y códigos QR para garantizar la seguridad de los usuarios al acceder a nuestra página web.
 
+Aqui dejamos un video donmde explicamos como aplicamos este ejercicio en .NET y en una estructura de 4 capas.
+https://youtu.be/benoRz7F2A0
+
 ## Tabla de Contenidos
 
 - [Introducción](#introducción)
