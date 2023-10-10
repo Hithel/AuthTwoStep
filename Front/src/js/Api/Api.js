@@ -33,7 +33,7 @@ export async function postLogin(data){
 
     if (User.status === 200) {
         alert("El Codigo de Verificacion QR se envio al correo!");
-        window.location.href = "../../../../Front/View/Verificacion.html";
+        window.location.href = "http://127.0.0.1:5500/Front/View/Verificacion.html";
     } else if (User.status === 400) {
         alert("El usuario es incorrecto.");
     }
@@ -50,7 +50,7 @@ export async function postVerify(data){
     let User = await fetch(`${url}/api/User/VerifyCode`, configuracion);
 
     if (User.status === 200) {
-        window.location.href = "../../../../Front/View/welcome.html";
+        window.location.href = "http://127.0.0.1:5500/Front/View/welcome.html";
     } else if (User.status === 400) {
         alert("El usuario o el Code son incorrectas.");
     }
